@@ -7,7 +7,7 @@ function loadClock() {
   const minuite = date.getMinutes();
   const second = date.getSeconds();
 
-  clock.innerText = `${hour < 10 ? `0${hour}` : hour}:${
+  clkText.innerText = `${hour < 10 ? `0${hour}` : hour}:${
     minuite < 10 ? `0${minuite}` : minuite
   }:${second < 10 ? `0${second}` : second}`;
 }
