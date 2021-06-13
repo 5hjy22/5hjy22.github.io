@@ -9,7 +9,7 @@ function loadClock() {
 
   clock.innerText = `${hour < 10 ? `0${hour}` : hour}:${
     minuite < 10 ? `0${minuite}` : minuite
-  }:${second < 10 ? 0`${second}` : second}`;
+  }:${second < 10 ? `0${second}` : second}`;
 }
 
 function init() {

@@ -10,3 +10,11 @@ body {
 .show {
   display: block;
 }
+
+.scheduleList-js {
+  list-style: none;
+}
+
+.finishLine {
+  text-decoration: line-through;
+}
