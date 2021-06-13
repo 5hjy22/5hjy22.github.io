@@ -12,6 +12,30 @@ function saveSchedule() {
   localStorage.setItem(SCHEDULE_LS, JSON.stringify(schedules));
 }
 
+function checkListPaint(checking) {
+  const checked = checking.check;
+  const li = document.createElement("li");
+  const chInput = document.createElement("input");
+  const span = document.createElement("span");
+  let id = ++idNum;
+
+  chInput.type = "checkbox";
+  chInput.value = checking.text;
+  chInput.addEventListener("click", handleClick);
+
+  span.innerText = checking.text;
+  if (checked === "checked") {
+    span.classList.add(LINETHROUGH);
+    chInput.checked = "checked";
+  }
+  li.appendChild(chInput);
+  li.appendChild(span);
+  li.id = `${id}${chInput.value}`;
+  schList.appendChild(li);
+  schedules.push(checking);
+  saveSchedule();
+}
+
 function handleClick(e) {
   const li = e.target.parentNode;
   const inputChecked = li.childNodes[0];
@@ -22,10 +46,14 @@ function handleClick(e) {
   } else {
     sche.classList.remove(LINETHROUGH);
   }
-
   schedules.forEach((schedule) => {
-    if (li.id === schedule.id) schedule.check = "checked";
+    if (li.id === schedule.id && schedule.check === "false") {
+      schedule.check = "checked";
+    } else if (li.id === schedule.id && schedule.check === "checked") {
+      schedule.check = "false";
+    }
   });
+  saveSchedule();
 }
 
 function paintSchedule(text) {
@@ -64,7 +92,7 @@ function loadSchedule() {
   const currSche = localStorage.getItem(SCHEDULE_LS);
   if (currSche !== null) {
     const parsedSchedules = JSON.parse(currSche);
-    parsedSchedules.forEach((schedule) => paintSchedule(schedule.text));
+    parsedSchedules.forEach((schedule) => checkListPaint(schedule));
   }
 }
 
