@@ -4,6 +4,8 @@ const schForm = document.querySelector(".scheduleForm-js"),
 
 const SCHEDULE_LS = "ScheduleList";
 const LINETHROUGH = "finishLine";
+const BEFORE_CLICK = "beforeClickCheckBox";
+const AFTER_CLICK = "afterClickCheckBox";
 
 let schedules = [];
 let idNum = 0;
@@ -13,43 +15,42 @@ function saveSchedule() {
 }
 
 function checkListPaint(checking) {
-  const checked = checking.check;
+  const check = checking.check;
   const li = document.createElement("li");
-  const chInput = document.createElement("input");
   const span = document.createElement("span");
   let id = ++idNum;
 
-  chInput.type = "checkbox";
-  chInput.value = checking.text;
-  chInput.addEventListener("click", handleClick);
+  li.addEventListener("click", handleClick);
 
   span.innerText = checking.text;
-  if (checked === "checked") {
+  if (check === "checked") {
+    li.classList.add(AFTER_CLICK);
     span.classList.add(LINETHROUGH);
-    chInput.checked = "checked";
+  } else {
+    li.classList.add(BEFORE_CLICK);
   }
-  li.appendChild(chInput);
+
   li.appendChild(span);
-  li.id = `${id}${chInput.value}`;
+  li.id = `${id}${span.innerText}`;
   schList.appendChild(li);
   schedules.push(checking);
   saveSchedule();
 }
 
 function handleClick(e) {
-  const li = e.target.parentNode;
-  const inputChecked = li.childNodes[0];
-  const sche = li.childNodes[1];
+  const li = e.target;
+  const sche = li.childNodes[0];
 
-  if (inputChecked.checked) {
-    sche.classList.add(LINETHROUGH);
-  } else {
-    sche.classList.remove(LINETHROUGH);
-  }
   schedules.forEach((schedule) => {
     if (li.id === schedule.id && schedule.check === "false") {
+      li.classList.remove(BEFORE_CLICK);
+      li.classList.add(AFTER_CLICK);
+      sche.classList.add(LINETHROUGH);
       schedule.check = "checked";
     } else if (li.id === schedule.id && schedule.check === "checked") {
+      li.classList.remove(AFTER_CLICK);
+      li.classList.add(BEFORE_CLICK);
+      sche.classList.remove(LINETHROUGH);
       schedule.check = "false";
     }
   });
@@ -58,23 +59,20 @@ function handleClick(e) {
 
 function paintSchedule(text) {
   const li = document.createElement("li");
-  const chInput = document.createElement("input");
   const span = document.createElement("span");
   let id = ++idNum;
 
-  chInput.type = "checkbox";
-  chInput.value = text;
-  chInput.addEventListener("click", handleClick);
+  li.classList.add(BEFORE_CLICK);
+  li.addEventListener("click", handleClick);
 
   span.innerText = text;
-  li.appendChild(chInput);
   li.appendChild(span);
-  li.id = `${id}${chInput.value}`;
+  li.id = `${id}${text}`;
   schList.appendChild(li);
 
   const schedule = {
     text: text,
-    id: `${id}${chInput.value}`,
+    id: `${id}${text}`,
     check: "false",
   };
   schedules.push(schedule);
@@ -89,6 +87,8 @@ function handleSubmit(e) {
 }
 
 function loadSchedule() {
+  const hasName = localStorage.getItem("User");
+  if (hasName) console.log("I have UserName");
   const currSche = localStorage.getItem(SCHEDULE_LS);
   if (currSche !== null) {
     const parsedSchedules = JSON.parse(currSche);
