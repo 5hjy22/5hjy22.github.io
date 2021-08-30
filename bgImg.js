@@ -13,13 +13,13 @@ function paintImage(imgNum) {
   body.appendChild(image);
 }
 
-function genRandom() {
+function getRandom() {
   const number = Math.floor(Math.random() * IMG_NUM + 1);
   return number;
 }
 
 function init() {
-  const randomNum = genRandom();
+  const randomNum = getRandom();
   paintImage(randomNum);
 }
 
